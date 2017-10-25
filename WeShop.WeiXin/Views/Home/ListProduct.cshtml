@@ -1,0 +1,110 @@
+﻿@model   WeShop.WeiXin.Models.HomeViewModel
+@{
+    ViewBag.Title = "ListProduct";
+    Layout = "~/Views/_LayoutNav.cshtml";
+}
+
+    <!--ftop开始-->
+    <div class="ftop">
+        <div class="index_search index_search01" style="padding-left: 10px;">
+            <div style="left:0px; width:100%;" onclick="document.location='search.html'">
+                <input type="text" placeholder="请输入您要搜索的产品">
+                <input type="button" value="">
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <!--ftop开始-->
+    <!--分类页面-->
+    <!--分类-->
+    <div class="fenlei">
+        <div class="fen-nav">
+            <ul>
+                @foreach (var sort in Model.Sort)
+                {
+                    if (sort.Code < 100)
+                    {
+                        if (sort.Code == 1)
+                        {
+                            <li class="on">@sort.Name</li>
+                        }
+                        else
+                        {
+                            <li>@sort.Name</li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+        <div class="fen-box">
+            <div class="fff">
+
+
+                @foreach (var sort in Model.Sort.Where(s => s.Code < 100))
+                {
+
+                    <div class="fenlist">
+                        <ul>
+                            @foreach (var item in Model.Sort.Where(i=>i.UpCode==sort.Code))
+                            {
+                            <li>
+                                <a class="imga" href="@Url.Action("Search_list","Home",new { code=item.Code})"><img src="@item.ImgUrl"></a>
+                                <a class="txta" href="@Url.Action("Search_list","Home",new { code=item.Code})">
+                                    <span>@item.Name</span>
+                                    <i>@item.Intro</i>
+                                </a>
+                            </li>
+
+                            }
+                        </ul>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    <!--分类-->
+    <!--分类页面-->
+@section  Style
+    {
+    <link href="~/Content/css/index.css" type="text/css" rel="stylesheet">
+    <link href="~/Content/css/swiper.min.css" type="text/css" rel="stylesheet">
+}
+   @section Script
+    {
+       <script>
+    var m=$(window).height()-98;
+    $(".fen-nav,.fen-box").css("height",m+"px");
+
+
+    var $lii = $(".fenlei .fen-nav li");
+    $(".fenlei .fen-box .fenlist").hide();
+    $(".fenlei .fen-box .fenlist").first().show();
+    $lii.click(function(){
+        var n = $(this).index();
+        var h = $(this).height();
+        //alert(h)
+        var sunh = n * h-1;
+        $(".fen-nav").animate({"scrollTop":sunh+"px"},1000)
+
+
+        $(this).addClass("on").siblings().removeClass("on");
+        var indexx = $lii.index(this);
+        $('.fenlei .fen-box').animate({scrollTop: '0px'},500);
+        $(".fenlei .fen-box .fff .fenlist").hide();
+        $(".fenlei .fen-box .fff .fenlist").eq(indexx).show();
+    })
+    var w=$(".fenli li img").width();
+    $(".fenli li img").height(w);
+    $(window).resize(function(){
+        var w=parseInt($(".fenli li img").width());
+        $(".fenli li img").height(w);
+    })
+
+</script>
+       
+       
+       }
+    
+
+
