@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
+using WeShop.EFModel;
 using WeShop.IService;
 using WeShop.WeiXin.Models;
 
@@ -11,6 +13,7 @@ namespace WeShop.WeiXin.Controllers
         public IProductService ProductService { get; set; }
         public ISortService SortService { get; set; }
         public IProReviewService ProReviewService { get; set; }
+        public IShoppingCartService ShoppingCartService { get; set; }
         private HomeViewModel homeviewmodel = new Models.HomeViewModel();
 
         // GET: Home
@@ -45,11 +48,38 @@ namespace WeShop.WeiXin.Controllers
             if (string.IsNullOrEmpty(procode))
             {
                 return RedirectToAction("Index", "Home");
+                
+                
             }
             homeviewmodel.Product = ProductService.GetEntities(p => p.Code == procode);
             ///这里还没有写全，缺少个查询条件（评价状态）
             homeviewmodel.ProReview = ProReviewService.GetEntities(p => p.ProCode == procode);
+            Session["Custid"] = 1;
             return View(homeviewmodel);
+        }
+
+        public ActionResult AddCat(string prcode,int prodqty)
+        {
+            ShoppingCart shoppcat = new ShoppingCart();
+                var shopping  = ShoppingCartService.GetEntity(s => s.CusId == (int) Session["Custid"] && s.ProCode == prcode);
+            bool result;
+            if (shopping == null)
+            {
+                shoppcat.CusId = 1;
+                shoppcat.ProCode = prcode;
+                shoppcat.Qty = prodqty;
+                shoppcat.CreateTime = DateTime.Now;
+
+                result = ShoppingCartService.Add(shoppcat);
+            }
+            else
+            {
+                shopping.Qty += prodqty;
+                result = ShoppingCartService.Modify(shopping);
+            }
+            string msg= result ? "ok" : "no";
+
+            return Json(msg);
         }
     }
 }

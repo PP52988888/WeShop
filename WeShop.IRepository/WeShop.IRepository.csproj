@@ -42,9 +42,11 @@
   <ItemGroup>
     <Compile Include="IBannerRepository.cs" />
     <Compile Include="IBaseRepository.cs" />
+    <Compile Include="ICustomerRepository.cs" />
     <Compile Include="INoticeRepository.cs" />
     <Compile Include="IProductRepository.cs" />
     <Compile Include="IProReviewRepository.cs" />
+    <Compile Include="IShoppingCartRepository.cs" />
     <Compile Include="ISortRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

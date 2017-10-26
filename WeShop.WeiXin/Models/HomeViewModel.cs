@@ -13,5 +13,7 @@ namespace WeShop.WeiXin.Models
         public IEnumerable<Product> Product { get; set; }
         public IEnumerable<Sort> Sort { get; set; }
         public IEnumerable<ProReview> ProReview { get; set; }
+        public IEnumerable<ShoppingCart> ShoppingCart { get; set; }
+        public IEnumerable<Customer> Customer { get; set; }
     }
 }

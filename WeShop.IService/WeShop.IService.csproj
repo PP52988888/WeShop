@@ -42,9 +42,11 @@
   <ItemGroup>
     <Compile Include="IBannerService.cs" />
     <Compile Include="IBaseService.cs" />
+    <Compile Include="ICustomerService.cs" />
     <Compile Include="INoticeService.cs" />
     <Compile Include="IProductService.cs" />
     <Compile Include="IProReviewService.cs" />
+    <Compile Include="IShoppingCartService.cs" />
     <Compile Include="ISortService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
