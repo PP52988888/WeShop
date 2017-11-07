@@ -14,21 +14,25 @@ namespace WeShop.WeiXin.Controllers
         public ISortService SortService { get; set; }
         public IProReviewService ProReviewService { get; set; }
         public IShoppingCartService ShoppingCartService { get; set; }
-        private HomeViewModel homeviewmodel = new Models.HomeViewModel();
+        private   HomeViewModel homeviewmodel = new Models.HomeViewModel();
+       
 
         // GET: Home
         public ActionResult Index()
         {
+            Session["Custid"] = 1;
             homeviewmodel.Banners = BannerService.GetEntities(b => true);
             homeviewmodel.NoticeNum = NoticeService.GetCount(b => true);
             homeviewmodel.Notice = NoticeService.GetEntitiesByPage(3, 1, false, n => true, n => n.ModiTime);
             homeviewmodel.NewProduct = ProductService.GetEntitiesByPage(5, 1, false, n => n.Type == 1 && n.Grounding == true, n => n.ModiTime);
+            homeviewmodel.ShoppingNum = ShoppingCartService.GetCount(s => s.CusId == (int) Session["Custid"]);
             return View(homeviewmodel);
         }
 
         public ActionResult ListProduct()
         {
             homeviewmodel.Sort = SortService.GetEntities(s => true);
+            homeviewmodel.ShoppingNum = ShoppingCartService.GetCount(s => s.CusId == (int)Session["Custid"]);
             return View(homeviewmodel);
         }
 
@@ -40,6 +44,7 @@ namespace WeShop.WeiXin.Controllers
             }
 
             homeviewmodel.Product = SortService.GetEntity(s => s.Code == code).Products;
+            homeviewmodel.ShoppingNum = ShoppingCartService.GetCount(s => s.CusId == (int)Session["Custid"]);
             return View(homeviewmodel);
         }
 
@@ -54,14 +59,14 @@ namespace WeShop.WeiXin.Controllers
             homeviewmodel.Product = ProductService.GetEntities(p => p.Code == procode);
             ///这里还没有写全，缺少个查询条件（评价状态）
             homeviewmodel.ProReview = ProReviewService.GetEntities(p => p.ProCode == procode);
-            Session["Custid"] = 1;
+            
             return View(homeviewmodel);
         }
 
         public ActionResult AddCat(string prcode,int prodqty)
         {
             ShoppingCart shoppcat = new ShoppingCart();
-                var shopping  = ShoppingCartService.GetEntity(s => s.CusId == (int) Session["Custid"] && s.ProCode == prcode);
+             var shopping  = ShoppingCartService.GetEntity(s => s.CusId == (int) Session["Custid"] && s.ProCode == prcode);
             bool result;
             if (shopping == null)
             {
@@ -69,7 +74,6 @@ namespace WeShop.WeiXin.Controllers
                 shoppcat.ProCode = prcode;
                 shoppcat.Qty = prodqty;
                 shoppcat.CreateTime = DateTime.Now;
-
                 result = ShoppingCartService.Add(shoppcat);
             }
             else
@@ -80,6 +84,13 @@ namespace WeShop.WeiXin.Controllers
             string msg= result ? "ok" : "no";
 
             return Json(msg);
+        }
+
+        public ActionResult ShopCar()
+        {
+            homeviewmodel.ShoppingNum = ShoppingCartService.GetCount(s => s.CusId == (int)Session["Custid"]);
+            homeviewmodel.ShoppingCart = ShoppingCartService.GetEntities(s => s.CusId == (int) Session["Custid"]);
+            return View(homeviewmodel);
         }
     }
 }

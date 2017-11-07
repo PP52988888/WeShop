@@ -23,7 +23,7 @@
         {
             <li>
                 <a href="@Url.Action("Product","Home",new {procode=product.Code })">
-                    <img src="@product.ProPhotoes.FirstOrDefault(p=>p.No==0).ImgUrl">
+                    <img src="@product.ProPhotoes.FirstOrDefault(p=>p.No==0).ImgUrl" />
                     <div class="search_item">
                         <p>@product.Name</p>
                         <h2><i>￥</i><b>@product.SellPrice</b><span>月销18252笔</span></h2>
